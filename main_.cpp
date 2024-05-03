@@ -350,9 +350,44 @@ int main(int argc, char **argv)
 
   // status = cgTest();
 
-//   status = cg_host(N, nz, I, J, val, load, result, 1);
+  // status = cg_host(N, nz, I, J, val, load, result, 1);
+  // resultPrint(nsize, ndim, node, result);
 
-//   resultPrint(nsize, ndim, node, result);
+  // Cochi equation
+  // Constutive equation
+  vector<double> epsilon(3);
+  vector<double> sigma(3);
+
+  double v = elastic[1];
+  double E = elastic[0];
+  // double la = 
+  // double mu = 
+  // double ka = 
+
+  printTensorH();
+  for (int ie = 0; ie < esize; ie++)
+  {
+
+
+
+    for (int p = 0; p < edim; p++)
+    {
+      // epsilon[0] += 
+      // epsilon[1] += 
+      // epsilon[2] += 
+
+      // plane strain
+      // sigma[0] += 
+      // sigma[1] += 
+      // sigma[2] += 
+
+      // plane stress
+      // sigma[0] += 
+      // sigma[1] += 
+      // sigma[2] += 
+    }
+    // printTensor(ie, epsilon, sigma);
+  }
 
   std::cin.get();
   int exit(status);
