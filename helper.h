@@ -104,9 +104,9 @@ inline void genTridiag(vector<int> &I, vector<int> &J, vector<double> &val, int 
 {
   nz = (N - 2) * 3 + 4;
 
-  I.reserve(N + 1);
-  J.reserve(nz);
-  val.reserve(nz);
+  I.resize(N + 1);
+  J.resize(nz);
+  val.resize(nz);
 
   I[0] = 0, J[0] = 0, J[1] = 1;
   val[0] = (double)rand() / RAND_MAX + 10.0f;
@@ -148,7 +148,8 @@ inline void genTridiag(vector<int> &I, vector<int> &J, vector<double> &val, int 
 int cgTest()
 {
   int N = 1048576, nz;
-  vector<int> I; vector<int> J;
+  vector<int> I;
+  vector<int> J;
   vector<double> val;
   vector<double> x(N);
   vector<double> rhs(N);
@@ -168,11 +169,19 @@ int cgTest()
 }
 
 // ============================================== helper functions ====================================================
-void pd(double v){
-  if (v < 0) 
+void pd(double v)
+{
+  if (v < 0)
     printf("%-15.3lf", v);
   else
     printf(" %-14.3lf", v);
+}
+void pe(double v)
+{
+  if (v < 0)
+    printf("%-15.3e", v);
+  else
+    printf(" %-14.3e", v);
 }
 void printABCDet(int ie, int edim, double det, vector<double> a, vector<double> b, vector<double> c)
 {
@@ -187,15 +196,33 @@ void printABCDet(int ie, int edim, double det, vector<double> a, vector<double> 
   }
 }
 
+void printTensorH()
+{
+  printf("\n\n%-14s %-14s %-14s %-14s %-14s %-14s %-14s\n", "elem", "e11", "e22", "g12", "s11", "s22", "s12");
+}
+void printTensor(int ie, vector<double> epsilon, vector<double> sigma)
+{
+  printf("%-14d", ie);
+  for (int i = 0; i < epsilon.size(); i++)
+  {
+    pe(epsilon[i]);
+  }
+  for (int i = 0; i < epsilon.size(); i++)
+  {
+    pe(sigma[i]);
+  }
+  printf("\n");
+}
+
 void printStiffness(int N, vector<double> stiffness)
 {
-  //printf("matrix %dx%d\n", N, N);
+  // printf("matrix %dx%d\n", N, N);
   for (int i = 0; i < stiffness.size(); i++)
   {
     if (stiffness[i] < 0)
-      printf("%-12.4lf", stiffness[i]);
+      printf("%-12.1lf", stiffness[i]);
     else
-      printf(" %-11.4lf", stiffness[i]);
+      printf(" %-11.1lf", stiffness[i]);
 
     if ((i + 1) % N == 0)
     {
@@ -204,11 +231,31 @@ void printStiffness(int N, vector<double> stiffness)
   }
   printf("\n");
 }
-void pd12(double v){
-  if (v < 0) 
-    printf("%-12.4lf", v);
+
+void printStiffness3(int N, vector<double> stiffness)
+{
+  // printf("matrix %dx%d\n", N, N);
+  for (int i = 0; i < stiffness.size(); i++)
+  {
+    if (stiffness[i] < 0)
+      printf("%-12.3lf", stiffness[i]);
+    else
+      printf(" %-11.3lf", stiffness[i]);
+
+    if ((i + 1) % N == 0)
+    {
+      printf("\n");
+    }
+  }
+  printf("\n");
+}
+
+void pd12(double v)
+{
+  if (v < 0)
+    printf("%-12.1lf", v);
   else
-    printf(" %-11.4lf", v);
+    printf(" %-11.1lf", v);
 }
 void printStiffnessF(int N, vector<double> stiffness, vector<double> f)
 {
@@ -223,7 +270,8 @@ void printStiffnessF(int N, vector<double> stiffness, vector<double> f)
 
     if ((i + 1) % N == 0)
     {
-      if (f.size() > 0){
+      if (f.size() > 0)
+      {
         printf("|");
         pd(f[j]);
         printf("\n");
@@ -236,8 +284,7 @@ void printStiffnessF(int N, vector<double> stiffness, vector<double> f)
   printf("\n");
 }
 
-
-void printSCR(int M, int N, int nz, vector<double> val, vector<int>I, vector<int>J)
+void printSCR(int M, int N, int nz, vector<double> val, vector<int> I, vector<int> J)
 {
 
   printf("\nnz=%d ", nz);
@@ -263,7 +310,7 @@ void printSCR(int M, int N, int nz, vector<double> val, vector<int>I, vector<int
 
 void resultPrint(int nsize, int ndim, vector<double> node, vector<double> result)
 {
-  printf("\n\n%-7s", "i");
+  printf("\n%-7s", "i");
   for (int i = 0; i < ndim; i++)
   {
     printf("x%-9i", i);
@@ -275,7 +322,7 @@ void resultPrint(int nsize, int ndim, vector<double> node, vector<double> result
   printf("\n");
   for (int p = 0; p < nsize; p++)
   {
-    printf("%-7d", p);
+    printf("%-6d", p);
     for (int i = 0; i < ndim; i++)
     {
       if (node[ndim * p + i] < 0.0)
@@ -285,13 +332,31 @@ void resultPrint(int nsize, int ndim, vector<double> node, vector<double> result
     }
     for (int i = 0; i < ndim; i++)
     {
-      
+
       if (result[ndim * p + i] < 0.0)
-        printf("%-15.3e", result[ndim * p + i]);
+        printf("%-15.5e", result[ndim * p + i]);
       else
-        printf(" %-14.3e", result[ndim * p + i]);
+        printf(" %-14.5e", result[ndim * p + i]);
     }
     printf("\n");
   }
-  printf("\n\n");
+  printf("\n");
+}
+
+void axialForcesPrint(vector<double> force)
+{
+  const int esize = force.size();
+  printf("\n%-7s%-9s\n", "ie", "axial force");
+  for (int ie = 0; ie < esize; ie++)
+  {
+    printf("%-6d", ie);
+
+    if (force[ie] < 0.0)
+      printf("%-10.3lf", force[ie]);
+    else
+      printf(" %-09.3lf", force[ie]);
+
+    printf("\n");
+  }
+  printf("\n");
 }
