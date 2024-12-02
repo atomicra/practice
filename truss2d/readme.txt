@@ -1,5 +1,6 @@
  См. глава 19, задача на стр. 250, параграф 19.3  
- ./docs/L.J.Segerlind. Applied Finite Element Analysis (2ed., Jonn Wiley Fnd Sons, 1984)(L)(T)(222s).pdf 
+ ./docs/L.J.Segerlind. Applied Finite Element Analysis (2ed., Jonn Wiley Fnd Sons, 1984)(L)(T)(222s).pdf
+ (дополнительно: E.Onate Structural Analysis with the Finite Element Method) 
  Выполнить реализацию вариационной постановки задачи о сжатии/растяжении стержня на плоскости. 
 
  0.0         0.0         0.0         0.0         0.0         0.0        
