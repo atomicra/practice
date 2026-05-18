@@ -122,18 +122,6 @@ void applyKinematic(int N, vector<double> u, vector<double> &f, vector<double> &
   {
     for (int q = 0; q < N; q++)
     {
-      if (isinf(u[p]))
-        continue;
-      if (p == q)
-      {
-        f[p] = stiffness[p * N + q] * u[p];
-      }
-      else
-      {
-        stiffness[p * N + q] = 0;
-        f[q] -= stiffness[q * N + p] * u[p];
-        stiffness[q * N + p] = 0;
-      }
     }
   }
   printf("\nKinematic boundary condition is applied\n\n");
